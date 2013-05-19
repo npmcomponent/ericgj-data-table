@@ -1,9 +1,12 @@
 var Emitter = require('emitter');
 
 function DataTable(el,model){
-  // TODO
+  if (!(this instanceof DataTable)) return new DataTable(el,model);
+  this.el = (typeof el == 'string' ? document.querySelector(el) : el);
+  this.recordsEl = this.el;
+  this.headerEl = this.el;
   this.model = model;
-  model.on('update', this.onUpdate.bind(this));
+  model.on('update', this.render.bind(this));
   return this;
 }
 
@@ -11,19 +14,17 @@ Emitter(DataTable.prototype);
 
 DataTable.prototype.record = function(tmpl, el){
   this._record = tmpl;
-  this.recordsEl = el || this.el;
+  if (el) 
+    this.recordsEl = (typeof el == 'string' ? document.querySelector(el) : el);
   return this;
 }
 
 DataTable.prototype.header = function(tmpl, el){
   this._header = tmpl;
-  this.headerEl = el || this.el;
+  if (el) 
+    this.headerEl = (typeof el == 'string' ? document.querySelector(el) : el);
   return this;
 }
-
-DataTable.prototype.onUpdate = function(recs){
-  this.render(recs);
-};
 
 DataTable.prototype.clear = function(){
   this.clearHeader();
@@ -32,18 +33,17 @@ DataTable.prototype.clear = function(){
 }
 
 DataTable.prototype.clearHeader = function(){
-  // TODO
+  empty(this.headerEl);
   return this;
 }
 
 DataTable.prototype.clearRecords = function(){
-  // TODO
+  empty(this.recordsEl);
   return this;
 }
 
 DataTable.prototype.headerEmpty = function(){
-  // TODO
-  return true;
+  return (!!this.headerEl.firstChild);
 }
 
 DataTable.prototype.render = function(recs){
@@ -72,4 +72,13 @@ DataTable.prototype.renderHeader = function(rec){
   this.emit('renderHeader');
 }
 
+
+// private
+
+/* inlined from yields/empty */
+
+function empty(el){
+  while (var node = el.firstChild) el.removeChild(node);
+  return el;
+}
 
