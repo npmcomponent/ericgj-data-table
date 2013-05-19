@@ -1,0 +1,19 @@
+{
+  "name": "data-table",
+  "repo": "ericgj/data-table",
+  "description": "Data table view, designed to work with component/model interface",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {
+    "component/emitter": "*"  
+  },
+  "development": {},
+  "license": "MIT",
+  "scripts": [
+    "index.js",
+    "template.js"
+  ],
+  "styles": [
+    "data-table.css"
+  ]
+}
