@@ -48,9 +48,9 @@ For more details see `test/index.html`.
 
 ### DataTable(el {Element|String}, model)
 
-### DataTable#header(fn {Function})
+### DataTable#header(fn {Function}, [el {Element|String}] )
 
-### DataTable#record(fn {Function})
+### DataTable#record(fn {Function}, [el {Element|String}] )
 
 ### DataTable#render(data {Array}) 
 

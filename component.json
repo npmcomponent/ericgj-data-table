@@ -2,7 +2,7 @@
   "name": "data-table",
   "repo": "ericgj/data-table",
   "description": "Minimalist data table view",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "keywords": [],
   "dependencies": {
     "component/emitter": "*",  
