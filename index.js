@@ -50,6 +50,7 @@ DataTable.prototype.headerEmpty = function(){
 }
 
 DataTable.prototype.render = function(recs){
+  if (!this._record) return;
   this.clearRecords();
   if (this.headerEmpty() && recs.length) this.renderHeader(recs[0]);
   for (var i=0;i<recs.length;++i){
@@ -67,6 +68,7 @@ DataTable.prototype.render = function(recs){
 }
 
 DataTable.prototype.renderHeader = function(rec){
+  if (!this._header) return;
   this.clearHeader();
   this.headerEl.appendChild(
     domify(
