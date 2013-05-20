@@ -8,17 +8,13 @@
     "component/emitter": "*",  
     "component/domify": "*"
   },
-  "development": {},
+  "development": {
+    "visionmedia/minstache": "*"
+  },
   "license": "MIT",
   "scripts": [
-    "index.js",
-    "test/model.js",
-    "test/example1-header.js",
-    "test/example1-record.js"
+    "index.js"
   ],
-  "local": [
-  ],
-  "paths": ["test"],
   "styles": [
     "data-table.css"
   ]
