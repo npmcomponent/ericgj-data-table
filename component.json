@@ -5,14 +5,20 @@
   "version": "0.0.1",
   "keywords": [],
   "dependencies": {
-    "component/emitter": "*"  
+    "component/emitter": "*",  
+    "component/domify": "*"
   },
   "development": {},
   "license": "MIT",
   "scripts": [
     "index.js",
-    "template.js"
+    "test/model.js",
+    "test/example1-header.js",
+    "test/example1-record.js"
   ],
+  "local": [
+  ],
+  "paths": ["test"],
   "styles": [
     "data-table.css"
   ]

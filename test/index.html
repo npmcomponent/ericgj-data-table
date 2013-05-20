@@ -1,0 +1,83 @@
+<!DOCTYPE 5>
+<html>
+  <head>
+    <title>Data Table</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="../build/build.css" />
+    <style>
+
+      ul {
+        -webkit-margin-before: 0;
+        -webkit-margin-before: 0;
+        -webkit-margin-start: 0;
+        -webkit-margin-end: 0;
+        -webkit-padding-start: 0;
+      }
+
+      body {
+        padding: 60px;
+        font: 300 14px "Helvetica Neue", Helvetica, Arial;
+        min-height: 1000px;
+      }
+
+      ul.data {
+        display: table;
+        list-style-type: none;
+        width: 600px;
+      }
+
+      ul.data > li {
+        display: table-row;
+      }
+
+      ul.data > li.header {
+        background-color: #cccccc;
+        font-weight: bold;
+      }
+
+      ul.data > li > ul > li {
+        display: inline-block;
+        padding: 0.5%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+    </style>
+  </head>
+  <body>
+   <h1>Data Table</h1>
+   <ul class="data" id="example1"></ul>
+   <button id="reload">Reload</button>
+   <script src="../build/build.js"></script>
+   <script>
+     var Table = require('data-table')
+     
+     /* example 1 */
+
+     var data1 = [
+       { name: 'Adam', email: 'adam@example.com', phone: '123-456-7890' },
+       { name: 'Betty', email: 'betty@white.com', phone: '234-567-8901' },
+       { name: 'Celyne', email: 'celyne@yahoob.com', phone: '345-678-9012'},
+       { name: 'Dale', email: 'dale@edu.edu', phone: '456-789-0123'},
+       { name: 'Earl', email: 'earl@foose.org', phone: '567-890-1234'}
+     ];
+
+     var m1 = require('data-table/test/model.js')(data1)
+       , h1 = require('data-table/test/example1-header.js')
+       , r1 = require('data-table/test/example1-record.js')
+       , t1 = Table('#example1', m1)
+                .header(h1)
+                .record(r1);
+
+     document.getElementById('reload').onclick = function(){
+       m1.update();   // emits 'update'
+    }
+
+    window.onload = function(){
+      document.getElementById('reload').click();
+    }
+
+   </script>
+  </body>
+</html>

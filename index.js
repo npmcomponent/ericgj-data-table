@@ -1,4 +1,7 @@
-var Emitter = require('emitter');
+var Emitter = require('emitter')
+  , domify  = require('domify')
+
+module.exports = DataTable;
 
 function DataTable(el,model){
   if (!(this instanceof DataTable)) return new DataTable(el,model);
@@ -6,7 +9,7 @@ function DataTable(el,model){
   this.recordsEl = this.el;
   this.headerEl = this.el;
   this.model = model;
-  model.on('update', this.render.bind(this));
+  if (model && model.on) model.on('update', this.render.bind(this));
   return this;
 }
 
@@ -43,19 +46,21 @@ DataTable.prototype.clearRecords = function(){
 }
 
 DataTable.prototype.headerEmpty = function(){
-  return (!!this.headerEl.firstChild);
+  return (!this.headerEl.firstChild);
 }
 
 DataTable.prototype.render = function(recs){
-  if (this.headerEmpty() && recs.length) this.renderHeader(recs[0]);
   this.clearRecords();
+  if (this.headerEmpty() && recs.length) this.renderHeader(recs[0]);
   for (var i=0;i<recs.length;++i){
     this.recordsEl.appendChild(
-      this._record({
-        model: this.model,
-        index: i,
-        record: recs[i]
-      })
+      domify(
+        this._record({
+          model: this.model,
+          index: i,
+          record: recs[i]
+        })
+      )[0]
     );
   }
   this.emit('render', recs.length);
@@ -64,10 +69,12 @@ DataTable.prototype.render = function(recs){
 DataTable.prototype.renderHeader = function(rec){
   this.clearHeader();
   this.headerEl.appendChild(
-    this._header({
-      model: this.model,
-      record: rec
-    })
+    domify(
+      this._header({
+        model: this.model,
+        record: rec
+      })
+    )[0]
   );
   this.emit('renderHeader');
 }
@@ -77,8 +84,8 @@ DataTable.prototype.renderHeader = function(rec){
 
 /* inlined from yields/empty */
 
-function empty(el){
-  while (var node = el.firstChild) el.removeChild(node);
+function empty(el,node){
+  while (node = el.firstChild) el.removeChild(node);
   return el;
 }
 
