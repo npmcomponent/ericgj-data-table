@@ -35,6 +35,10 @@ For the header template, `model` and `record` (the first record) are exposed.
 For the record template, `model`, `record`, and `index` are exposed for each
 record in the data.
 
+- If an element is not specified as the second parameter of `header()` and 
+`record()`, the header and records are both attached to the element passed
+in the constructor.
+
 - You can render an array of records directly using `table.render(data)`. 
 For instance in an xhr callback: `model.all( errorWrapper(table.render.bind(table)) )` .
 
