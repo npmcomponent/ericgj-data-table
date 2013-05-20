@@ -18,14 +18,14 @@ Emitter(DataTable.prototype);
 DataTable.prototype.record = function(tmpl, el){
   this._record = tmpl;
   if (el) 
-    this.recordsEl = (typeof el == 'string' ? document.querySelector(el) : el);
+    this.recordsEl = (typeof el == 'string' ? this.el.querySelector(el) : el);
   return this;
 }
 
 DataTable.prototype.header = function(tmpl, el){
   this._header = tmpl;
   if (el) 
-    this.headerEl = (typeof el == 'string' ? document.querySelector(el) : el);
+    this.headerEl = (typeof el == 'string' ? this.el.querySelector(el) : el);
   return this;
 }
 
