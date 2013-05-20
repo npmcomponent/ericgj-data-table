@@ -49,6 +49,27 @@
    <ul class="data" id="example1"></ul>
    <button id="reload">Reload</button>
    <script src="../build/build.js"></script>
+   
+   <script id="example1-header" type="text/plain">
+    <li class="header">
+      <ul>
+        <li style="width: 38%;">Name</li>
+        <li style="width: 38%;">Email</li>
+        <li style="width: 18%;">Phone</li>
+      </ul>
+    </li>
+   </script>
+   
+   <script id="example1-record" type="text/plain">
+    <li data-index="{{index}}">
+      <ul>
+        <li style="width: 38%;">{{record.name}}</li>
+        <li style="width: 38%;">{{record.email}}</li>
+        <li style="width: 18%;">{{record.phone}}</li>
+      </ul>
+    </li>
+   </script>
+   
    <script>
       var Table = require('data-table')
         , Emitter = require('component-emitter')
@@ -101,26 +122,8 @@
        { name: 'Earl', email: 'earl@foose.org', phone: '567-890-1234'}
      ];
 
-     var h1 = minstache.compile(
-       ['<li class="header">',
-        '  <ul>',
-        '    <li style="width: 38%;">Name</li>',
-        '    <li style="width: 38%;">Email</li>',
-        '    <li style="width: 18%;">Phone</li>',
-        '  </ul>',
-        '</li>'
-       ].join('')
-     )
-     ,   r1 = minstache.compile(
-       ['<li data-index="{{index}}">',
-        '  <ul>',
-        '    <li style="width: 38%;">{{record.name}}</li>',
-        '    <li style="width: 38%;">{{record.email}}</li>',
-        '    <li style="width: 18%;">{{record.phone}}</li>',
-        '  </ul>',
-        '</li>'
-       ].join('')
-     )
+     var h1 = minstache.compile( document.getElementById("example1-header").innerHTML)
+     ,   r1 = minstache.compile( document.getElementById("example1-record").innerHTML)
 
      var m1 = Model(data1)
        , t1 = Table('#example1', m1)
