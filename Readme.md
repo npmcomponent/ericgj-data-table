@@ -1,7 +1,7 @@
 
 # data-table
 
-  Data table view, designed to work with component/model interface
+  Minimalist data table view
 
 ## Installation
 

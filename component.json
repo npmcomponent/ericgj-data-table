@@ -1,7 +1,7 @@
 {
   "name": "data-table",
   "repo": "ericgj/data-table",
-  "description": "Data table view, designed to work with component/model interface",
+  "description": "Minimalist data table view",
   "version": "0.0.1",
   "keywords": [],
   "dependencies": {
@@ -16,6 +16,5 @@
     "index.js"
   ],
   "styles": [
-    "data-table.css"
   ]
 }
