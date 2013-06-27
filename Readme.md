@@ -24,7 +24,7 @@ var table = DataTable('#table', model)
 Note that the passed templates are _precompiled template functions_, using
 whatever template engine you wish.
 
-### Rendering bound to (reactive) views
+### Rendering (reactive) views
 
 ```javascript
 var table = DataTable('#table', model)
