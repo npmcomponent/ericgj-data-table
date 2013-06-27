@@ -4,9 +4,8 @@
   Minimalist data table view
 
   Encapsulates rendering of header and records from model, and that's it.
-  Bring your own sorting, pagination, selection, etc.
-  
-  Now header and record templates can be bound to [reactive][reactive] views.
+  Bring your own sorting, pagination, selection, etc. Header and record 
+  templates can be bound to [reactive][reactive] views.
 
 ## Installation
 
@@ -14,57 +13,57 @@
 
 ## Examples
 
-Given some structure:
-```html
-<div id="table">
-  <div class="header"></div>
-  <div class="records"></div>
-</div>
-```
+### Simple rendering
 
-Render model data within it according to provided (compiled) templates:
 ```javascript
 var table = DataTable('#table', model)
-              .header(headerTemplate, null, '.header')
-              .record(recordTemplate, null, '.records');
-
+              .header(headerTemplate)
+              .record(recordTemplate);
 ```
 
-_Or_ for reactive headers/records, pass the reactive template (string) and view class:
+Note that the passed templates are _precompiled template functions_, using
+whatever template engine you wish.
+
+### Rendering bound to (reactive) views
+
 ```javascript
 var table = DataTable('#table', model)
-              .header(headerTemplate, headerView, '.header')
-              .record(recordTemplate, recordView, '.records');
+              .header(headerTemplate, headerView)
+              .record(recordTemplate, recordView);
 ```
 
-Note:
+Note here the passed templates are _strings_, which are DOMified and passed 
+into the view constructors together with the models. 
+
+Your views are responsible for doing the binding, which can use reactive or
+some other library.
+
+## More details:
 
 - For simple rendering, `header()` and `record()` take compiled templates.
 For the header template, `model` and `record` (the first record) are exposed.
 For the record template, `model`, `record`, and `index` are exposed for each
 record in the data.
 
-- For reactive templates, `header()` and `record()` each take a __string__ template,
+- For reactive templates, `header()` and `record()` each take a _string_ template,
 and the class of the view that binds the model to the template.
 
-the header and records are both attached to the element passed
-in the constructor, except f an element is not specified as the third parameter of `header()` and 
+- For either simple or reactive rendering, the header and records are both 
+attached to the element passed in the constructor by default, or you can specify
+an element as the third parameter of `header()` and `record()`. (Useful in cases
+such as classic tables where `<thead>` is a separate branch from `<tbody>`.)
 
-- You can render an array of records directly using `table.render(data)`. 
-For instance in an xhr callback: `model.all( table.render.bind(table)) )` .
-
-For more details see `test/index.html`.
-
+For more examples of use see `test/index.html`.
 
 ## API
 
-### DataTable(el {Element|String}, model)
+### DataTable( el {Element|String}, model )
 
-### DataTable#header(tmpl {Function|String}, [view], [el {Element|String}] )
+### DataTable#header( tmpl {Function|String}, [view, el {Element|String}] )
 
-### DataTable#record(tmpl {Function|String}, [view]. [el {Element|String}] )
+### DataTable#record( tmpl {Function|String}, [view, el {Element|String}] )
 
-### DataTable#render(data {Array}) 
+### DataTable#render( data {Array} ) 
 
 ### DataTable#clear()
 
