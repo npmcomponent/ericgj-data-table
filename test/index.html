@@ -42,14 +42,24 @@
         white-space: nowrap;
       }
 
+      ul.data > li > ul:hover { cursor: pointer; }
+
+      ul.data > li > ul.selected {
+        background-color: pink;
+      }
+
     </style>
   </head>
   <body>
    <h1>Data Table</h1>
+   <h2>Example 1: simple rendering</h2>
    <ul class="data" id="example1"></ul>
-   <button id="reload">Reload</button>
+   <hr /> 
+   <h2>Example 2: reactive views</h2>
+   <ul class="data" id="example2"></ul>
+
    <script src="../build/build.js"></script>
-   
+
    <script id="example1-header" type="text/plain">
     <li class="header">
       <ul>
@@ -70,10 +80,32 @@
     </li>
    </script>
    
+   <script id="example2-header" type="text/plain">
+    <li class="header">
+      <ul>
+        <li style="width: 38%;">Name</li>
+        <li style="width: 38%;">Email</li>
+        <li style="width: 18%;">Phone</li>
+      </ul>
+    </li>
+   </script>
+   
+   <script id="example2-record" type="text/plain">
+    <li>
+      <ul on-click="select">
+        <li style="width: 38%;">{name}</li>
+        <li style="width: 38%;">{email}</li>
+        <li style="width: 18%;">{phone}</li>
+      </ul>
+    </li>
+   </script>
+   
    <script>
       var Table = require('data-table')
         , Emitter = require('component-emitter')
         , minstache = require('visionmedia-minstache')
+        , classes = require('component-classes')
+        , reactive = require('component-reactive')
 
       function Model(data){
         if (!(this instanceof Model)) return new Model(data);
@@ -81,40 +113,7 @@
         return Emitter(this);
       }
 
-      Model.prototype.update = function(){
-        this.emit('update', randomize(this.data) )
-      }
-
-      // mimics update
-      function randomize(input){
-        var perms = permutes(input)
-        return perms[ Math.floor(Math.random() * (perms.length + 1)) ];
-      }
-
-      function permutes(input){
-        var permArr = [],
-        usedChars = [];
-        function main(input){
-            var i, ch;
-            for (i = 0; i < input.length; i++) {
-                ch = input.splice(i, 1)[0];
-                usedChars.push(ch);
-                if (input.length == 0) {
-                    permArr.push(usedChars.slice());
-                }
-                main(input);
-                input.splice(i, 0, ch);
-                usedChars.pop();
-            }
-            return permArr;
-        }
-        return main(input);
-      }
-
-
-     /* example 1 */
-
-     var data1 = [
+     var data = [
        { name: 'Adam', email: 'adam@example.com', phone: '123-456-7890' },
        { name: 'Betty', email: 'betty@white.com', phone: '234-567-8901' },
        { name: 'Celyne', email: 'celyne@yahoob.com', phone: '345-678-9012'},
@@ -122,20 +121,40 @@
        { name: 'Earl', email: 'earl@foose.org', phone: '567-890-1234'}
      ];
 
+     /* example 1 */
+
      var h1 = minstache.compile( document.getElementById("example1-header").innerHTML)
      ,   r1 = minstache.compile( document.getElementById("example1-record").innerHTML)
 
-     var m1 = Model(data1)
+     var m1 = Model(data)
        , t1 = Table('#example1', m1)
                 .header(h1)
                 .record(r1);
 
-     document.getElementById('reload').onclick = function(){
-       m1.update();   // emits 'update'
-    }
+     /* example 2 */
+
+     function RecordView(el,model){
+       this.model = model;
+       this.el = el;
+       this.view = reactive(el,model,this);
+     }
+
+     RecordView.prototype.select = function(e){
+       var el = e.target.parentNode;  // li is clicked, ul is selected
+       classes(el).toggle('selected');
+     }
+
+     var h2 = h1
+       , r2 = document.getElementById("example2-record").innerHTML
+
+     var m2 = Model(data)
+       , t2 = Table('#example2',m2)
+                .header(h2)
+                .record(r2, RecordView);
 
     window.onload = function(){
-      document.getElementById('reload').click();
+      t1.render(m1.data);
+      t2.render(m2.data);
     }
 
    </script>
