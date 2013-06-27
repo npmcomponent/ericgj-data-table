@@ -6,11 +6,13 @@
   Encapsulates rendering of header and records from model, and that's it.
   Bring your own sorting, pagination, selection, etc.
   
+  Now header and record templates can be bound to [reactive][reactive] views.
+
 ## Installation
 
     $ component install ericgj/data-table
 
-## Example
+## Examples
 
 Given some structure:
 ```html
@@ -20,30 +22,36 @@ Given some structure:
 </div>
 ```
 
-Render model data within it according to provided templates:
+Render model data within it according to provided (compiled) templates:
 ```javascript
 var table = DataTable('#table', model)
-              .header(headerTemplate, '.header')
-              .record(recordTemplate, '.records');
+              .header(headerTemplate, null, '.header')
+              .record(recordTemplate, null, '.records');
 
+```
+
+_Or_ for reactive headers/records, pass the reactive template (string) and view class:
+```javascript
+var table = DataTable('#table', model)
+              .header(headerTemplate, headerView, '.header')
+              .record(recordTemplate, recordView, '.records');
 ```
 
 Note:
 
-- `header()` and `record()` take compiled templates.
+- For simple rendering, `header()` and `record()` take compiled templates.
 For the header template, `model` and `record` (the first record) are exposed.
 For the record template, `model`, `record`, and `index` are exposed for each
 record in the data.
 
-- If an element is not specified as the second parameter of `header()` and 
-`record()`, the header and records are both attached to the element passed
-in the constructor.
+- For reactive templates, `header()` and `record()` each take a __string__ template,
+and the class of the view that binds the model to the template.
+
+the header and records are both attached to the element passed
+in the constructor, except f an element is not specified as the third parameter of `header()` and 
 
 - You can render an array of records directly using `table.render(data)`. 
-For instance in an xhr callback: `model.all( errorWrapper(table.render.bind(table)) )` .
-
-- You can also have the table render automatically by having your model emit
-'update' with the records.
+For instance in an xhr callback: `model.all( table.render.bind(table)) )` .
 
 For more details see `test/index.html`.
 
@@ -52,9 +60,9 @@ For more details see `test/index.html`.
 
 ### DataTable(el {Element|String}, model)
 
-### DataTable#header(fn {Function}, [el {Element|String}] )
+### DataTable#header(tmpl {Function|String}, [view], [el {Element|String}] )
 
-### DataTable#record(fn {Function}, [el {Element|String}] )
+### DataTable#record(tmpl {Function|String}, [view]. [el {Element|String}] )
 
 ### DataTable#render(data {Array}) 
 
@@ -64,3 +72,6 @@ For more details see `test/index.html`.
 ## License
 
   MIT
+
+
+[reactive]: https://github.com/component/reactive
