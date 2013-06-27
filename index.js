@@ -9,7 +9,7 @@ function DataTable(el,model){
   this.recordsEl = this.el;
   this.headerEl = this.el;
   this.model = model;
-  this._recordViews = [];
+  this.recordViews = [];
   return this;
 }
 
@@ -39,13 +39,13 @@ DataTable.prototype.clear = function(){
 
 DataTable.prototype.clearHeader = function(){
   empty(this.headerEl);
-  if (this._headerView) delete this._headerView;
+  if (this.headerView) delete this.headerView;
   return this;
 }
 
 DataTable.prototype.clearRecords = function(){
   empty(this.recordsEl);
-  this._recordViews.splice(0,0);
+  this.recordViews.splice(0,0);
   return this;
 }
 
@@ -62,7 +62,7 @@ DataTable.prototype.render = function(recs){
     if (this._recordViewClass) {
       el = domify(this._record);
       var view = new this._recordViewClass(el, recs[i]);
-      this._recordViews.push(view);
+      this.recordViews.push(view);
     } else { 
       el = rendered(this._record, recs[i], this.model, i); 
     }
@@ -77,8 +77,8 @@ DataTable.prototype.renderHeader = function(rec){
   var el;
   if (this._headerViewClass) {
     el = domify(this._header);
-    var view = new this._headerViewClass(el, this.model);
-    this._headerView = view;
+    var view = new this._headerViewClass(el, this.model, this);
+    this.headerView = view;
   } else {
     el = rendered(this._header, rec, this.model);
   }

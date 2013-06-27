@@ -7,7 +7,7 @@
 
       ul {
         -webkit-margin-before: 0;
-        -webkit-margin-before: 0;
+        -webkit-margin-after: 0;
         -webkit-margin-start: 0;
         -webkit-margin-end: 0;
         -webkit-padding-start: 0;
@@ -48,6 +48,16 @@
         background-color: pink;
       }
 
+      ul.data > li.header > ul > li.asc:after {
+        content: "\2191";
+        padding-left: 3px;
+      }
+
+      ul.data > li.header > ul > li.desc:after {
+        content: "\2193";
+        padding-left: 3px;
+      }
+
     </style>
   </head>
   <body>
@@ -55,8 +65,12 @@
    <h2>Example 1: simple rendering</h2>
    <ul class="data" id="example1"></ul>
    <hr /> 
-   <h2>Example 2: reactive views (click on a record to select)</h2>
-   <ul class="data" id="example2"></ul>
+   <h2>Example 2: reactive views</h2>
+   <div id="example2">
+     <ul class="data header"></ul>
+     <ul class="data records"></ul>
+   </div>
+   <h3>Click on a record to select, click on a header to sort.</h3>
 
    <script src="../build/build.js"></script>
 
@@ -83,9 +97,9 @@
    <script id="example2-header" type="text/plain">
     <li class="header">
       <ul>
-        <li style="width: 38%;">Name</li>
-        <li style="width: 38%;">Email</li>
-        <li style="width: 18%;">Phone</li>
+        <li style="width: 38%;" data-attr="name" on-click="toggle">Name</li>
+        <li style="width: 38%;" data-attr="email" on-click="toggle">Email</li>
+        <li style="width: 18%;" data-attr="phone" on-click="toggle">Phone</li>
       </ul>
     </li>
    </script>
@@ -113,6 +127,19 @@
         return Emitter(this);
       }
 
+      Model.prototype.sort = function(attr,dir,fn){
+        fn = fn || function(a,b){ 
+          if (a[attr] < b[attr]) { return (!dir || dir == 'asc' ? -1 :  1) }
+          if (b[attr] < a[attr]) { return (!dir || dir == 'asc' ?  1 : -1) }
+          return 0;
+        };
+        this.data.sort(fn);
+      }
+
+      Model.prototype.unsort = function(){
+        this.sort('name','asc');
+      }
+
      var data = [
        { name: 'Adam', email: 'adam@example.com', phone: '123-456-7890' },
        { name: 'Betty', email: 'betty@white.com', phone: '234-567-8901' },
@@ -131,6 +158,7 @@
                 .header(h1)
                 .record(r1);
 
+
      /* example 2 */
 
      function RecordView(el,model){
@@ -144,18 +172,77 @@
        classes(el).toggle('selected');
      }
 
-     var h2 = h1
+     function HeaderView(el,model){
+       this.model = model;
+       this.el = el;
+       this.toggles = [null, 'asc', 'desc'];
+       this.view = reactive(el,model,this);
+     }
+     Emitter(HeaderView.prototype);
+     
+     HeaderView.prototype.toggle = function(e){
+       var el = e.target
+         , attr = el.getAttribute('data-attr')
+         , direction = toggleClass(el, this.toggles);
+       if (direction){
+         this.emit('sort', attr, direction);
+         this.emit(['sort', attr].join(' '), direction);
+       } else {
+         this.emit('unsort', attr);
+         this.emit(['unsort',attr].join(' '));
+       }
+     }
+
+     var h2 = document.getElementById("example2-header").innerHTML
        , r2 = document.getElementById("example2-record").innerHTML
 
      var m2 = Model(data)
        , t2 = Table('#example2',m2)
-                .header(h2)
-                .record(r2, RecordView);
+                .header(h2, HeaderView, '#example2 > .header')
+                .record(r2, RecordView, '#example2 > .records');
+
+    t2.on('render header', function(){
+      t2.headerView.on('sort', function(attr,dir){
+        m2.sort(attr,dir);
+        t2.render(m2.data); 
+      })
+      t2.headerView.on('unsort', function(attr){
+        m2.unsort();
+        t2.render(m2.data);
+      })
+    });
 
     window.onload = function(){
       t1.render(m1.data);
       t2.render(m2.data);
     }
+
+
+   // private
+
+     function toggleClass(el, toggles){
+       var elClasses = classes(el)
+         , ary = elClasses.array()
+         , cur = 0
+       for (var i=0;i<ary.length;++i){
+         var found = indexOf(toggles,ary[i])
+         if (~found){
+           cur = found; break;
+         }
+       }
+       if (cur >= 0 && toggles[cur]) elClasses.remove(toggles[cur]);
+       cur = (cur + 1) % toggles.length;
+       if (toggles[cur]) elClasses.add(toggles[cur]);
+       return toggles[cur];
+     }
+
+     function indexOf(arr,obj){
+       if ([].indexOf) return arr.indexOf(obj);
+       for (var i=0;i<arr.length;++i){
+         if (arr[i] === obj) return i;
+       }
+       return -1;
+     };
 
    </script>
   </body>

@@ -50,22 +50,55 @@ and the class of the view that binds the model to the template.
 
 - For either simple or reactive rendering, the header and records are both 
 attached to the element passed in the constructor by default, or you can specify
-an element as the third parameter of `header()` and `record()`. (Useful in cases
-such as classic tables where `<thead>` is a separate branch from `<tbody>`.)
+an element as the third parameter of `header()` and `record()`. Useful in cases
+such as classic tables where `<thead>` is a separate branch from `<tbody>`. Also
+useful if you want to re-render records but not the header.
 
 For more examples of use see `test/index.html`.
 
 ## API
 
-### DataTable( el {Element|String}, model )
+### DataTable( el, [modelClass] )
 
-### DataTable#header( tmpl {Function|String}, [view, el {Element|String}] )
+Construct data table at el (element or string), with optional model class specified.
+Note the model class is not used generally, it's there in case your templates need it.
 
-### DataTable#record( tmpl {Function|String}, [view, el {Element|String}] )
+### DataTable#header( tmpl, [view, el] )
 
-### DataTable#render( data {Array} ) 
+Specify the header template (function for simple rendering, string for reactive), and
+optional view, and optional el (element or selector string) where header is appended.
+
+### DataTable#record( tmpl, [view, el] )
+
+Specify the record template (function or string), optional view, and optional el 
+(element or selector string) where records are appended.
+
+### DataTable#render( data ) 
+
+Render records from data (array of objects), and header if header doesn't exist.
 
 ### DataTable#clear()
+
+Clear header and records and remove any views.
+
+### DataTable#headerView
+
+View object bound to header
+
+### DataTable#recordViews
+
+Array of view objects bound to records
+
+
+## Events
+
+### 'render', n
+
+After records rendered. N is the number of records rendered.
+
+### 'render header'
+
+After header rendered.
 
 
 ## License
