@@ -1,0 +1,12 @@
+{
+  "name": "ericgj-data-table",
+  "description": "Minimalist data table view",
+  "version": "0.1.2",
+  "keywords": [],
+  "styles": [],
+  "dependencies": {
+    "component-emitter": "git://github.com/npmcomponent/component-emitter.git",
+    "component-domify": "git://github.com/npmcomponent/component-domify.git"
+  },
+  "license": "MIT"
+}

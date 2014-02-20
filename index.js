@@ -1,5 +1,5 @@
-var Emitter = require('emitter')
-  , domify  = require('domify')
+var Emitter = require('component-emitter')
+  , domify  = require('component-domify')
 
 module.exports = DataTable;
 
